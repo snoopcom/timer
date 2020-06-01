@@ -1,14 +1,24 @@
-/* eslint-disable jsx-a11y/img-redundant-alt */
 import React from 'react';
-import './App.css';
-import logo from './logo.svg';
+import './App.scss';
+import { Tabs } from 'antd';
+import logo from './logo.png';
+
+const { TabPane } = Tabs;
 
 function App() {
   return (
     <div className="App">
-      <h1>Мой проект</h1>
-      <h2>test</h2>
-      <img src={logo} alt="image" />
+      <header>
+        <img src={logo} alt="logo" />
+      </header>
+      <Tabs className="Tabs" defaultActiveKey="1">
+        <TabPane tab="Tab 1" key="1">
+          Pane 1
+        </TabPane>
+        <TabPane tab="Tab 2" key="2">
+          Pane 2
+        </TabPane>
+      </Tabs>
     </div>
   );
 }
