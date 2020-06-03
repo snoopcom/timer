@@ -1,0 +1,19 @@
+.timer-container {
+    display: flex;
+    flex-direction: row; 
+}
+
+.timer-button {
+    display: block;
+}
+
+.button {
+    margin-top: 15px;
+    margin-right: 5px;
+}
+
+.timer-value{
+    margin-left: 60px;
+    margin-top: 15px;
+    font-size: 50px;
+}
