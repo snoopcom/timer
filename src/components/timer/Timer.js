@@ -1,47 +1,89 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Button } from 'antd';
+
 import './Timer.scss';
-import Display from './Display';
 
-function Timer() {
-  const [time, setTime] = useState({ ms: 0, s: 0, m: 0 }); // поставил пока хуки
+export default class Timer extends React.Component {
 
-  const start = () => {
-    run();
-    setInterval(run, 10);
-  };
+  state = {
+    active: true,
+    timeInMs: '000',
+    accTime: 0,
+    startTime: 0,
+  }
+  
+  onClickStart = () => {
+    const active = this.state.active;
 
-  let updatedMs = time.ms;
-  let updatedS = time.s;
-  let updatedM = time.m;
+    if (active) {
+      this.intervalId = setInterval(this.run, 60)
 
-  const run = () => {
-    if (updatedS === 60) {
-      updatedM += 1;
-      updatedS = 0;
+      this.setState({
+        startTime: Date.now(),
+      })
     }
-    if (updatedMs === 99) {
-      updatedS += 1;
-      updatedMs = 0;
+
+    this.setState({
+      active: !active,
+    })
+    
+    if (!active) {
+      clearInterval(this.intervalId);
+
+      this.setState((prevState) =>({
+        accTime: prevState.timeInMs,
+      }))
     }
-    updatedMs += 1;
-    return setTime({ms:updatedMs, s:updatedS, m:updatedM});
-  };
-  return (
-    <div className="timer-container">
-      <div className="timer-button">
-        <Button type="primary" className="button" block onClick={start}>
-          START
-        </Button>
-        <Button type="primary" className="button" block>
-          RESET
-        </Button>
+  }
+
+  run = () => {
+    this.setState((prevState) => ({
+      timeInMs: prevState.accTime + (Date.now() - prevState.startTime)
+    }));
+  }
+
+  onClickReset = () => {
+    clearInterval(this.intervalId);
+
+    this.setState({
+      active: true,
+      timeInMs: '000',
+      accTime: 0,
+      startTime: 0
+    });
+  }
+
+  render() {
+    const { timeInMs, active } = this.state;
+
+    const resMinutes = (ms) => parseInt((ms / (1000 * 60) % 60));
+    const resSeconds = (ms) => parseInt((ms / 1000) % 60);
+    const resMilliseconds = (ms) => ms.toString().slice(-3, -1);
+
+    const minutes = resMinutes(timeInMs);
+    const seconds = resSeconds(timeInMs);
+    const milliseconds = resMilliseconds(timeInMs);
+
+    let changeBtn;
+    if (active) {
+      changeBtn = 'START';
+    } else {
+      changeBtn = 'PAUSE';
+    }
+
+    console.log(this.state);
+    return (
+      <div className='timer-container'>
+        <div className='block-button'>
+          <Button className='button' onClick={this.onClickStart}>{changeBtn}</Button>
+          <Button className='button' onClick={this.onClickReset}>RESET</Button>
+        </div>
+        <span className='display'>
+          {minutes < 10 ? `0${minutes}` : minutes}:
+          {seconds < 10 ? `0${seconds}` : seconds}:
+          {milliseconds}
+        </span>
       </div>
-      <div className="timer-value" >
-        <Display time={time} />
-      </div>
-    </div>
-  );
+    );
+  }
 }
-
-export default Timer;

@@ -3,17 +3,18 @@
     flex-direction: row; 
 }
 
-.timer-button {
-    display: block;
+.block-button {
+    width: 50%;
 }
 
 .button {
+    width: 180px;
     margin-top: 15px;
-    margin-right: 5px;
 }
 
-.timer-value{
-    margin-left: 60px;
+.display{
+    font-family: Trebuchet MS, Arial, Helvetica, sans-serif;
+    margin-left: 7px;
     margin-top: 15px;
     font-size: 50px;
 }
