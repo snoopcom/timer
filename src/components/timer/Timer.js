@@ -3,7 +3,7 @@ import { Button } from 'antd';
 
 import './Timer.scss';
 
-export default class Timer extends React.Component {
+class Timer extends React.Component {
 
   state = {
     active: true,
@@ -75,8 +75,8 @@ export default class Timer extends React.Component {
     return (
       <div className='timer-container'>
         <div className='block-button'>
-          <Button className='button' onClick={this.onClickStart}>{changeBtn}</Button>
-          <Button className='button' onClick={this.onClickReset}>RESET</Button>
+          <Button className='button' type="primary" onClick={this.onClickStart}>{changeBtn}</Button>
+          <Button className='button' type="primary" danger  onClick={this.onClickReset}>RESET</Button>
         </div>
         <span className='display'>
           {minutes < 10 ? `0${minutes}` : minutes}:
@@ -87,3 +87,5 @@ export default class Timer extends React.Component {
     );
   }
 }
+
+export default Timer;
