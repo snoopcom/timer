@@ -1,19 +1,36 @@
 import React from 'react';
-import { InputNumber, Button } from 'antd';
+import { Button, InputNumber } from 'antd';
 
 class Countdown extends React.Component {
-  state = { 
-    active: true, 
-    timeInS: '000',
-    accTime: 180000, // общее заданное время 
-    startTime: 0, 
-    disabled: true, // свойство активноасти окошка
+
+  state = {
+    active: true,
+    startTime: 0,
+    accTime: 0,
+    timeInS: 0,
+    minutes: 0,
+    seconds: 0,
+    allTimeSecond: 0,
+  }
+
+  onChangeMinutes = (value) => {
+    this.setState((prevState) => ({
+      minutes: value,
+      allTimeSecond: prevState.seconds + (value * 60),
+    }))
+  }
+ 
+  onChangeSeconds = (value) => {
+    this.setState((prevState) => ({
+      seconds: value,
+      allTimeSecond: (prevState.minutes * 60) + value,
+    }))
   }
 
   onClickStart = () => {
     const active = this.state.active;
-    /* если active */
-    if (active) {
+
+    if(active) {
       this.intervalId = setInterval(this.run, 60);
 
       this.setState({
@@ -25,7 +42,6 @@ class Countdown extends React.Component {
       active: !active,
     })
 
-    /* если не active */
     if (!active) {
       clearInterval(this.intervalId);
 
@@ -34,63 +50,35 @@ class Countdown extends React.Component {
       }));
     }
   }
-  /* ресет */
-  onClickReset = () => {
-    clearInterval(this.intervalId);
-
-    this.setState({
-      active: true, //
-      timeInS: '000',
-      accTime: 180000, // общее заданное время 
-      startTime: 0, 
-    })
-  }
 
   run = () => {
     this.setState((prevState) => ({
-      timeInS: prevState.accTime - (Date.now() - prevState.startTime),
-    }))
+      timeInS: parseInt( (Date.now() - prevState.startTime) / 1000),
+    }));
   }
-  /* функция из библиотеки ант */
-  toggle = () => {
-    this.setState({
-      disabled: !this.state.disabled,
-    });
-  };
-  
+
   render() {
-    const timeInS  = this.state.timeInS;
     
-    const resMinutes = (ms) => parseInt((ms / (1000 * 60) % 60));
-    const resSecundes = (ms) => parseInt((ms / 1000) % 60);
-    
-    const secundes = resSecundes(timeInS);
-    const minutes = resMinutes(timeInS);
+    const timeInS = this.state.timeInS;
+    const allTimeSecond = this.state.allTimeSecond;
 
+    const resMinutes = (full, timeInS) => parseInt((full - timeInS) / 60);
+    const resSecons = (full, timeInS) => (full - timeInS) % 60;
+
+    const displayMinutes = resMinutes(allTimeSecond, timeInS);
+    const displaySeconds = resSecons(allTimeSecond, timeInS);
+    
     console.log(this.state);
-
     return (
       <div>
-        <span>
-          {minutes}:
-        </span>
-        <span>
-          {secundes}
-        </span>
         <div>
-          <Button onClick={this.onClickStart}>START</Button>
-          <Button onClick={this.onClickReset}>RESET</Button>
+          {displayMinutes}:
+          {displaySeconds}
         </div>
-        <div>
-        <div>
-          <InputNumber min={0} max={60} disabled={this.state.disabled} defaultValue={0} />
-          <div style={{ marginTop: 20 }}>
-            <Button onClick={this.toggle} type="primary">
-              Toggle disabled
-            </Button>
-          </div>
-        </div>
-      </div>
+        <InputNumber min={0} max={60} defaultValue={0} onChange={this.onChangeMinutes}/>
+        <InputNumber min={0} max={59} defaultValue={0} onChange={this.onChangeSeconds}/>
+        <Button onClick={this.onClickStart}>Start</Button>
+        <Button onClick={this.onClickReset}>Reset</Button>
       </div>
     );
   }
