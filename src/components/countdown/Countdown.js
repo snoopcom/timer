@@ -148,11 +148,11 @@ class Countdown extends React.Component {
           {displayMinutes}:
           {displaySeconds}
         </div>
-        <InputNumber min={0} max={60} defaultValue={0} onChange={this.onChangeMinutes} disabled={!onDisabledDisplay} value={minutes} />
+        <InputNumber min={0} max={720} defaultValue={0} onChange={this.onChangeMinutes} disabled={!onDisabledDisplay} value={minutes} />
         <InputNumber min={0} max={59} defaultValue={0} onChange={this.onChangeSeconds} disabled={!onDisabledDisplay} value={seconds}/>
         <Button onClick={this.onClickStart} disabled={inputAllowed}>{changeBtn}</Button>
         <Button onClick={this.onClickReset} disabled={onDisabledReset}>Reset</Button>
-        <Slider min={0} max={3600} onChange={this.onChangeSlider} disabled={onDisabledSlider} />
+        <Slider step={15} min={0} max={3600} onChange={this.onChangeSlider} disabled={onDisabledSlider} value={allTimeSecond}/>
         <Progress type="circle" percent={displayProgress} />
       </div>
     );
