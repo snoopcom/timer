@@ -172,7 +172,7 @@ class Countdown extends React.Component {
               {displaySeconds < 10 ? `0${displaySeconds}` : displaySeconds}
             </span>
           </div>
-          <Progress width={127} type="circle" percent={displayProgress} />
+          <Progress className="countdown-progress" type="circle" percent={displayProgress} />
         </div>
         <div className="countdown-block-input">
           <CountdownInputTime

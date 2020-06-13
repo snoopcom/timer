@@ -18,6 +18,10 @@
   margin-top: 15px;
 }
 
+.countdown-progress{
+  width: 127px;
+}
+
 .display {
   font-family: Trebuchet, Arial, Helvetica, sans-serif;
   margin-top: 15px;
@@ -45,3 +49,29 @@
   width: 355px;
   margin: 0 auto;
 }
+
+@media screen and (max-width:360px) {
+  .countdown-btn-progress {
+    justify-content: space-between;
+  }
+  .block-button {
+    width: 155px;
+  }
+  .button_countdown {
+    width: 140px;
+  }
+  .countdown-progress{
+    margin-right: 10px;
+  }
+  .input-container {
+    width: 330px;
+  }
+  .input-container_item {
+    width: 140px;
+  }
+  .countdown-slider{
+    width: 300px;
+  }
+}
+ 
+  

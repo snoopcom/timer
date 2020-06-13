@@ -17,3 +17,15 @@
     margin-top: 15px;
     font-size: 47px;
 }
+
+@media screen and (max-width:360px) {
+    .button_timer {
+        width: 120px;
+        margin-top: 15px;
+    }
+    .display-timer {
+        font-family: Trebuchet MS, Arial, Helvetica, sans-serif;
+        margin-top: 25px;
+        font-size: 38px;
+    }
+}

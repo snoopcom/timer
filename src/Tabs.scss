@@ -3,3 +3,11 @@
   padding-top: 30px;
   margin: 0 auto;
 }
+
+@media screen and (max-width: 360px) {
+  .Tabs {
+    max-width: 310px;
+    padding-top: 30px;
+    margin: 0 auto;
+  }
+}
