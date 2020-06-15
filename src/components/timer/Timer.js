@@ -73,7 +73,6 @@ class Timer extends React.Component {
       changeBtn = 'PAUSE';
     }
 
-    // console.log(this.state);
     return (
       <div className="timer-container">
         <div className="button-block-timer">
