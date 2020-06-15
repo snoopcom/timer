@@ -1,0 +1,24 @@
+.input-container{ 
+  width: 368px;
+  display: flex;
+  justify-content: space-around;
+}
+
+.input_item {
+  width: 160px;
+}
+
+@media screen and (max-width:400px) {
+  .input-container {
+    width: 295px;
+    display: flex;
+    justify-content: space-around;
+  }
+  .input-container_item {
+    width: 120px;
+    //border: red 1px solid;
+  }
+  .input_item {
+    width: 120px;
+  }  
+}

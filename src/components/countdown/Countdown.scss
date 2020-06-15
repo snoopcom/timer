@@ -34,23 +34,13 @@
   margin-bottom: 15px;
 }
 
-.input-container{ 
-  width: 368px;
-  display: flex;
-  justify-content: space-around;
-}
-
-.input-container_item {
-  width: 160px;
-}
-
 .countdown-slider{
   display: block;
   width: 355px;
   margin: 0 auto;
 }
-/*
-@media screen and (max-width:360px) {
+
+@media screen and (max-width:400px) {
   .countdown-btn-progress {
     justify-content: space-between;
   }
@@ -63,15 +53,9 @@
   .countdown-progress{
     margin-right: 10px;
   }
-  .input-container {
-    width: 295px;
-  }
-  .input-container_item {
-    width: 120px;
-  }
   .countdown-slider{
     width: 295px;
   }
 }
-*/
+
   
