@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from 'antd';
-import './timer.scss';
+import './Timer.scss';
 
 class Timer extends React.Component {
   constructor(props) {

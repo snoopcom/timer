@@ -1,7 +1,7 @@
 import React from 'react';
 import { InputNumber } from 'antd';
 import PropTypes from 'prop-types';
-import './countdownInputTime.scss';
+import './CountdownInputTime.scss';
 
 const CountdownInputTime = (props) => {
   const { onDisabledDisplay, minutes, seconds, onChangeMinutes, onChangeSeconds } = props;

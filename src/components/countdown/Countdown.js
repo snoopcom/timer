@@ -3,7 +3,7 @@ import { Button, Slider, Progress } from 'antd';
 import { Howl } from 'howler';
 import CountdownInputTime from '../countdownInputTime/CountdownInputTime';
 import audio from './countdown.mp3';
-import './countdown.scss';
+import './Countdown.scss';
 
 const sound = new Howl({
   src: [audio],
