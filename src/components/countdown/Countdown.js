@@ -1,22 +1,17 @@
 import React from 'react';
 import { Button, Slider, Progress } from 'antd';
-import { Howl } from 'howler';
 import CountdownInputTime from '../countdownInputTime/CountdownInputTime';
-import audio from './countdown.mp3';
 import './Countdown.scss';
 
-const sound = new Howl({
-  src: [audio],
-  loop: true,
-});
+const pathSound = require('../../assets/Countdown.mp3');
 
 class Countdown extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      active: true,
+      isActive: true,
       startTime: 0,
-      accTime: 0,
+      currentTime: 0,
       timeInS: 0,
       minutes: 0,
       seconds: 0,
@@ -27,6 +22,9 @@ class Countdown extends React.Component {
       onDisabledSlider: false,
     };
 
+    this.sound = new Audio(pathSound);
+    this.sound.loop = true;
+
     /* Slider */
     this.onChangeSlider = (value) => {
       this.setState({
@@ -35,6 +33,7 @@ class Countdown extends React.Component {
         seconds: value % 60,
       });
     };
+
     /* события минуты/секуды */
     this.onChangeMinutes = (value) => {
       this.setState((prevState) => ({
@@ -52,9 +51,9 @@ class Countdown extends React.Component {
 
     /* START */
     this.onClickStart = () => {
-      const { active } = this.state;
+      const { isActive } = this.state;
 
-      if (active) {
+      if (isActive) {
         this.intervalId = setInterval(this.run, 60);
 
         this.setState({
@@ -66,15 +65,15 @@ class Countdown extends React.Component {
       }
 
       this.setState({
-        active: !active,
+        isActive: !isActive,
       });
 
-      if (!active) {
+      if (!isActive) {
         clearInterval(this.intervalId);
 
         this.setState((prevState) => ({
           timeInS: prevState.timeInS,
-          accTime: prevState.timeInS,
+          currentTime: prevState.timeInS,
         }));
       }
     };
@@ -82,11 +81,11 @@ class Countdown extends React.Component {
     /* RESET */
     this.onClickReset = () => {
       clearInterval(this.intervalId);
-      sound.stop();
+      this.sound.load();
       this.setState((prevState) => ({
-        active: true,
+        isActive: true,
         timeInS: 0,
-        accTime: 0,
+        currentTime: 0,
         allTimeSecond: prevState.allTimeSecond,
         startTime: prevState.startTime,
         onDisabledDisplay: true,
@@ -106,37 +105,50 @@ class Countdown extends React.Component {
         this.setState({
           onDisabledStart: false,
         });
-        sound.play();
+        this.sound.play();
       }
 
       this.setState((prevState) => ({
-        timeInS: parseInt(prevState.accTime + (Date.now() - prevState.startTime) / 1000, 10),
+        timeInS: parseInt(prevState.currentTime + (Date.now() - prevState.startTime) / 1000, 10),
       }));
+    };
+
+    /* форматирование времени */
+    this.timeFormatting = () => {
+      const { allTimeSecond, timeInS } = this.state;
+
+      const resMinutes = parseInt((allTimeSecond - timeInS) / 60, 10);
+      const resSecons = (allTimeSecond - timeInS) % 60;
+
+      return `${resMinutes < 10 ? `0${resMinutes}` : resMinutes}:${
+        resSecons < 10 ? `0${resSecons}` : resSecons
+      }`;
+    };
+
+    /* демонстрация прогресса */
+    this.demonstrationoOfProgress = () => {
+      const { allTimeSecond, timeInS } = this.state;
+      const resProgress = parseInt((100 * timeInS) / allTimeSecond, 10);
+      return resProgress;
     };
   }
 
   render() {
-    const { active } = this.state;
-    const { timeInS } = this.state;
-    const { allTimeSecond } = this.state;
-    const { onDisabledStart } = this.state;
-    const { onDisabledDisplay } = this.state;
-    const { onDisabledReset } = this.state;
-    const { onDisabledSlider } = this.state;
-    const { seconds } = this.state;
-    const { minutes } = this.state;
-
-    const resMinutes = (full, sec) => parseInt((full - sec) / 60, 10);
-    const resSecons = (full, sec) => (full - sec) % 60;
-    const resProgress = (full, sec) => parseInt((100 * sec) / full, 10);
-
-    const displayMinutes = resMinutes(allTimeSecond, timeInS);
-    const displaySeconds = resSecons(allTimeSecond, timeInS);
-    const displayProgress = resProgress(allTimeSecond, timeInS);
+    const {
+      isActive,
+      timeInS,
+      allTimeSecond,
+      onDisabledStart,
+      onDisabledDisplay,
+      onDisabledReset,
+      onDisabledSlider,
+      seconds,
+      minutes,
+    } = this.state;
 
     const inputAllowed = allTimeSecond > 0 ? !onDisabledStart : onDisabledStart;
 
-    const changeBtn = active ? 'START' : 'PAUSE';
+    const changeBtn = isActive ? 'START' : 'PAUSE'; 
 
     return (
       <div>
@@ -159,12 +171,13 @@ class Countdown extends React.Component {
             >
               Reset
             </Button>
-            <span className="display">
-              {displayMinutes < 10 ? `0${displayMinutes}` : displayMinutes}:
-              {displaySeconds < 10 ? `0${displaySeconds}` : displaySeconds}
-            </span>
+            <span className="display">{this.timeFormatting()}</span>
           </div>
-          <Progress className="countdown-progress" type="circle" percent={displayProgress} />
+          <Progress
+            className="countdown-progress"
+            type="circle"
+            percent={this.demonstrationoOfProgress()}
+          />
         </div>
         <div className="countdown-block-input">
           <CountdownInputTime

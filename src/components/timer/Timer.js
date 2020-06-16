@@ -7,16 +7,16 @@ class Timer extends React.Component {
     super(props);
 
     this.state = {
-      active: true,
-      timeInMs: '000',
-      accTime: 0,
+      isActive: true,
+      timeInMs: 0,
+      currentTime: 0,
       startTime: 0,
     };
 
     this.onClickStart = () => {
-      const { active } = this.state;
+      const { isActive } = this.state;
 
-      if (active) {
+      if (isActive) {
         this.intervalId = setInterval(this.run, 60);
 
         this.setState({
@@ -25,21 +25,21 @@ class Timer extends React.Component {
       }
 
       this.setState({
-        active: !active,
+        isActive: !isActive,
       });
 
-      if (!active) {
+      if (!isActive) {
         clearInterval(this.intervalId);
 
         this.setState((prevState) => ({
-          accTime: prevState.timeInMs,
+          currentTime: prevState.timeInMs,
         }));
       }
     };
 
     this.run = () => {
       this.setState((prevState) => ({
-        timeInMs: prevState.accTime + (Date.now() - prevState.startTime),
+        timeInMs: prevState.currentTime + (Date.now() - prevState.startTime),
       }));
     };
 
@@ -47,31 +47,32 @@ class Timer extends React.Component {
       clearInterval(this.intervalId);
 
       this.setState({
-        active: true,
-        timeInMs: '000',
-        accTime: 0,
+        isActive: true,
+        timeInMs: 0,
+        currentTime: 0,
         startTime: 0,
       });
+    };
+
+    /* форматирование времени */
+    this.timeFormatting = () => {
+      const { timeInMs } = this.state;
+
+      const minutes = Math.floor(timeInMs / 1000 / 60);
+      const seconds = Math.floor(timeInMs / 1000 - minutes * 60);
+      const milliseconds = (timeInMs - minutes * 60 * 1000 - seconds * 1000) / 10;
+      const resMilliseconds = Math.floor(milliseconds);
+
+      return `${minutes < 10 ? `0${minutes}` : minutes}:${seconds < 10 ? `0${seconds}` : seconds}:${
+        resMilliseconds < 10 ? `0${resMilliseconds}` : resMilliseconds
+      }`;
     };
   }
 
   render() {
-    const { timeInMs, active } = this.state;
+    const { isActive } = this.state;
 
-    const resMinutes = (ms) => parseInt((ms / (1000 * 60)) % 60, 10);
-    const resSeconds = (ms) => parseInt((ms / 1000) % 60, 10);
-    const resMilliseconds = (ms) => ms.toString().slice(-3, -1);
-
-    const minutes = resMinutes(timeInMs);
-    const seconds = resSeconds(timeInMs);
-    const milliseconds = resMilliseconds(timeInMs);
-
-    let changeBtn;
-    if (active) {
-      changeBtn = 'START';
-    } else {
-      changeBtn = 'PAUSE';
-    }
+    const changeBtn = isActive ? 'START' : 'PAUSE';
 
     return (
       <div className="timer-container">
@@ -83,10 +84,7 @@ class Timer extends React.Component {
             RESET
           </Button>
         </div>
-        <span className="display-timer">
-          {minutes < 10 ? `0${minutes}` : minutes}:{seconds < 10 ? `0${seconds}` : seconds}:
-          {milliseconds}
-        </span>
+        <span className="display-timer">{this.timeFormatting()}</span>
       </div>
     );
   }
