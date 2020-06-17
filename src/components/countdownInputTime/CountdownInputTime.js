@@ -4,7 +4,12 @@ import PropTypes from 'prop-types';
 import './CountdownInputTime.scss';
 
 const CountdownInputTime = (props) => {
-  const { onDisabledDisplay, minutes, seconds, onChangeMinutes, onChangeSeconds, maxMinutes } = props;
+  const { isActive,  onDisabledDisplay, minutes, seconds, onChangeMinutes, onChangeSeconds, maxMinutes } = props;
+
+  const timeMaxInMinutes = () => {
+    return minutes >= maxMinutes ? !onDisabledDisplay : onDisabledDisplay;
+  };
+
   return (
     <div className="input-container">
       <div className="input-container_item"> 
@@ -27,7 +32,7 @@ const CountdownInputTime = (props) => {
           max={59}
           defaultValue={0}
           onChange={onChangeSeconds}
-          disabled={minutes >= maxMinutes ? !onDisabledDisplay : onDisabledDisplay}
+          disabled={timeMaxInMinutes()}
           value={seconds}
         />
       </div>

@@ -2,16 +2,18 @@ import React from 'react';
 import { Button } from 'antd';
 import './Timer.scss';
 
+const initState = {
+  isActive: true,
+  timeInMs: 0,
+  currentTime: 0,
+  startTime: 0,
+}
+
 class Timer extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      isActive: true,
-      timeInMs: 0,
-      currentTime: 0,
-      startTime: 0,
-    };
+    this.state = initState;
 
     this.onClickStart = () => {
       const { isActive } = this.state;

@@ -5,22 +5,25 @@ import './Countdown.scss';
 
 const pathSound = require('../../assets/Countdown.mp3');
 
+const initState = {
+  isActive: true,
+  startTime: 0,
+  currentTime: 0,
+  timeInS: 0,
+  minutes: 0,
+  seconds: 0,
+  allTimeSecond: 0,
+  onDisabledStart: true,
+  onDisabledDisplay: true,
+  onDisabledReset: true,
+  onDisabledSlider: false,
+};
+
 class Countdown extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      isActive: true,
-      startTime: 0,
-      currentTime: 0,
-      timeInS: 0,
-      minutes: 0,
-      seconds: 0,
-      allTimeSecond: 0,
-      onDisabledStart: true,
-      onDisabledDisplay: true,
-      onDisabledReset: true,
-      onDisabledSlider: false,
-    };
+
+    this.state = initState;
 
     this.sound = new Audio(pathSound);
     this.sound.loop = true;
@@ -34,14 +37,24 @@ class Countdown extends React.Component {
       });
     };
 
-    /* события минуты/секуды */
+    /* минуты */
     this.onChangeMinutes = (value) => {
+      const { minutes, allTimeSecond } = this.state;
+
+      /* чтобы не уходило за 720 */
+      if (allTimeSecond > minutes) {
+        this.setState({
+          seconds: 0,
+        });
+      }
+
       this.setState((prevState) => ({
         minutes: value,
         allTimeSecond: prevState.seconds + value * 60,
       }));
     };
 
+    /* секуды */
     this.onChangeSeconds = (value) => {
       this.setState((prevState) => ({
         seconds: value,
@@ -136,7 +149,6 @@ class Countdown extends React.Component {
   render() {
     const {
       isActive,
-      timeInS,
       allTimeSecond,
       onDisabledStart,
       onDisabledDisplay,
@@ -148,7 +160,9 @@ class Countdown extends React.Component {
 
     const inputAllowed = allTimeSecond > 0 ? !onDisabledStart : onDisabledStart;
 
-    const changeBtn = isActive ? 'START' : 'PAUSE'; 
+    const changeBtn = isActive ? 'START' : 'PAUSE';
+
+    console.log(this.state);
 
     return (
       <div>
