@@ -7,6 +7,7 @@ const pathSound = require('../../assets/Countdown.mp3');
 
 const initState = {
   isActive: true,
+  isInactive: true,
   startTime: 0,
   currentTime: 0,
   timeInS: 0,
@@ -14,8 +15,8 @@ const initState = {
   seconds: 0,
   allTimeSecond: 0,
   onDisabledStart: true,
-  onDisabledDisplay: true,
-  onDisabledReset: true,
+  // onDisabledDisplay: true,
+  // onDisabledReset: true,
   onDisabledSlider: false,
 };
 
@@ -71,8 +72,9 @@ class Countdown extends React.Component {
 
         this.setState({
           startTime: Date.now(),
-          onDisabledDisplay: false,
-          onDisabledReset: false,
+          isInactive: false,
+          isActive: true,
+          //onDisabledReset: false,
           onDisabledSlider: true,
         });
       }
@@ -85,6 +87,7 @@ class Countdown extends React.Component {
         clearInterval(this.intervalId);
 
         this.setState((prevState) => ({
+          isInactive: false,
           timeInS: prevState.timeInS,
           currentTime: prevState.timeInS,
         }));
@@ -97,13 +100,14 @@ class Countdown extends React.Component {
       this.sound.load();
       this.setState((prevState) => ({
         isActive: true,
+        isInactive: true,
         timeInS: 0,
         currentTime: 0,
         allTimeSecond: prevState.allTimeSecond,
         startTime: prevState.startTime,
-        onDisabledDisplay: true,
+        // onDisabledDisplay: true,
         onDisabledSlider: false,
-        onDisabledReset: true,
+        // onDisabledReset: true,
         onDisabledStart: true,
       }));
     };
@@ -149,6 +153,7 @@ class Countdown extends React.Component {
   render() {
     const {
       isActive,
+      isInactive,
       allTimeSecond,
       onDisabledStart,
       onDisabledDisplay,
@@ -181,7 +186,7 @@ class Countdown extends React.Component {
               type="primary"
               className="button_countdown"
               onClick={this.onClickReset}
-              disabled={onDisabledReset}
+              disabled={isInactive}
             >
               Reset
             </Button>
@@ -195,11 +200,12 @@ class Countdown extends React.Component {
         </div>
         <div className="countdown-block-input">
           <CountdownInputTime
+            isInactive={isInactive}
             onChangeMinutes={this.onChangeMinutes}
             onChangeSeconds={this.onChangeSeconds}
             minutes={minutes}
             seconds={seconds}
-            onDisabledDisplay={!onDisabledDisplay}
+            // onDisabledDisplay={!onDisabledDisplay}
           />
         </div>
         <div className="countdown-slider">

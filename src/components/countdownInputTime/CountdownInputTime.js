@@ -4,10 +4,11 @@ import PropTypes from 'prop-types';
 import './CountdownInputTime.scss';
 
 const CountdownInputTime = (props) => {
-  const { isActive,  onDisabledDisplay, minutes, seconds, onChangeMinutes, onChangeSeconds, maxMinutes } = props;
-
+  const { isActive, isInactive,  onDisabledDisplay, minutes, seconds, onChangeMinutes, onChangeSeconds, maxMinutes } = props;
+ 
+  /* отключаем инпут с секундами, если 720 минут */
   const timeMaxInMinutes = () => {
-    return minutes >= maxMinutes ? !onDisabledDisplay : onDisabledDisplay;
+    return minutes >= maxMinutes ? isInactive : !isInactive;
   };
 
   return (
@@ -20,7 +21,7 @@ const CountdownInputTime = (props) => {
           max={maxMinutes}
           defaultValue={0}
           onChange={onChangeMinutes}
-          disabled={onDisabledDisplay}
+          disabled={!isInactive}
           value={minutes}
         />
       </div>
@@ -41,14 +42,16 @@ const CountdownInputTime = (props) => {
 };
 
 CountdownInputTime.defaultProps = {
-  onDisabledDisplay: true,
+  isInactive: true,
+  // onDisabledDisplay: true,
   minutes: 0,
   seconds: 0,
   maxMinutes: 720,
 };
 
 CountdownInputTime.propTypes = {
-  onDisabledDisplay: PropTypes.bool,
+  isInactive: PropTypes.bool,
+  // onDisabledDisplay: PropTypes.bool,
   minutes: PropTypes.number,
   seconds: PropTypes.number,
   maxMinutes: PropTypes.number,
