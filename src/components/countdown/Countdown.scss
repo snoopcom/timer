@@ -5,13 +5,28 @@
   margin-top: 10px;
   margin-bottom: 10px;
 }
+@media screen and (max-width:400px) {
+  .countdown-btn-progress {
+    justify-content: space-between;
+  }
+}
 
 .block-button {
   width: 160px;
 }
+@media screen and (max-width:400px) {
+  .block-button {
+    width: 150px;
+  }
+}
 
 .button_countdown {
   width: 160px;
+}
+@media screen and (max-width:400px) {
+  .button_countdown {
+    width: 120px;
+  }
 }
 
 .button_countdown:nth-last-child(2) {
@@ -20,6 +35,11 @@
 
 .countdown-progress{
   width: 127px;
+}
+@media screen and (max-width:400px) {
+  .countdown-progress{
+    margin-right: 10px;
+  }
 }
 
 .display {
@@ -39,20 +59,8 @@
   width: 355px;
   margin: 0 auto;
 }
-
 @media screen and (max-width:400px) {
-  .countdown-btn-progress {
-    justify-content: space-between;
-  }
-  .block-button {
-    width: 150px;
-  }
-  .button_countdown {
-    width: 120px;
-  }
-  .countdown-progress{
-    margin-right: 10px;
-  }
+  
   .countdown-slider{
     width: 295px;
   }

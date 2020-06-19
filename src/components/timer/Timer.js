@@ -19,7 +19,7 @@ class Timer extends React.Component {
       const { isActive } = this.state;
 
       if (isActive) {
-        this.intervalId = setInterval(this.run, 60);
+        this.intervalId = setInterval(this.timerStart, 60);
 
         this.setState({
           startTime: Date.now(),
@@ -39,7 +39,7 @@ class Timer extends React.Component {
       }
     };
 
-    this.run = () => {
+    this.timerStart = () => {
       this.setState((prevState) => ({
         timeInMs: prevState.currentTime + (Date.now() - prevState.startTime),
       }));
@@ -74,13 +74,13 @@ class Timer extends React.Component {
   render() {
     const { isActive } = this.state;
 
-    const changeBtn = isActive ? 'START' : 'PAUSE';
+    const btnName = isActive ? 'START' : 'PAUSE';
 
     return (
       <div className="timer-container">
         <div className="button-block-timer">
           <Button className="button_timer" type="primary" onClick={this.onClickStart}>
-            {changeBtn}
+            {btnName}
           </Button>
           <Button className="button_timer" type="primary" danger onClick={this.onClickReset}>
             RESET

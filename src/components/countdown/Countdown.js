@@ -7,17 +7,14 @@ const pathSound = require('../../assets/Countdown.mp3');
 
 const initState = {
   isActive: true,
-  isInactive: true,
+  isStopped: true,
+  onDisabledStart: true,
   startTime: 0,
   currentTime: 0,
   timeInS: 0,
   minutes: 0,
   seconds: 0,
   allTimeSecond: 0,
-  onDisabledStart: true,
-  // onDisabledDisplay: true,
-  // onDisabledReset: true,
-  onDisabledSlider: false,
 };
 
 class Countdown extends React.Component {
@@ -68,14 +65,11 @@ class Countdown extends React.Component {
       const { isActive } = this.state;
 
       if (isActive) {
-        this.intervalId = setInterval(this.run, 60);
+        this.intervalId = setInterval(this.timerStart, 60);
 
         this.setState({
           startTime: Date.now(),
-          isInactive: false,
-          isActive: true,
-          //onDisabledReset: false,
-          onDisabledSlider: true,
+          isStopped: false,
         });
       }
 
@@ -87,7 +81,7 @@ class Countdown extends React.Component {
         clearInterval(this.intervalId);
 
         this.setState((prevState) => ({
-          isInactive: false,
+          isStopped: false,
           timeInS: prevState.timeInS,
           currentTime: prevState.timeInS,
         }));
@@ -100,21 +94,17 @@ class Countdown extends React.Component {
       this.sound.load();
       this.setState((prevState) => ({
         isActive: true,
-        isInactive: true,
+        isStopped: true,
         timeInS: 0,
         currentTime: 0,
         allTimeSecond: prevState.allTimeSecond,
         startTime: prevState.startTime,
-        // onDisabledDisplay: true,
-        onDisabledSlider: false,
-        // onDisabledReset: true,
         onDisabledStart: true,
       }));
     };
 
-    this.run = () => {
-      const { timeInS } = this.state;
-      const { allTimeSecond } = this.state;
+    this.timerStart = () => {
+      const { timeInS, allTimeSecond } = this.state;
 
       if (timeInS >= allTimeSecond) {
         clearInterval(this.intervalId);
@@ -151,23 +141,11 @@ class Countdown extends React.Component {
   }
 
   render() {
-    const {
-      isActive,
-      isInactive,
-      allTimeSecond,
-      onDisabledStart,
-      onDisabledDisplay,
-      onDisabledReset,
-      onDisabledSlider,
-      seconds,
-      minutes,
-    } = this.state;
+    const { isActive, isStopped, allTimeSecond, onDisabledStart, seconds, minutes } = this.state;
 
     const inputAllowed = allTimeSecond > 0 ? !onDisabledStart : onDisabledStart;
 
-    const changeBtn = isActive ? 'START' : 'PAUSE';
-
-    console.log(this.state);
+    const btnName = isActive ? 'START' : 'PAUSE';
 
     return (
       <div>
@@ -179,14 +157,14 @@ class Countdown extends React.Component {
               onClick={this.onClickStart}
               disabled={inputAllowed}
             >
-              {changeBtn}
+              {btnName}
             </Button>
             <Button
               danger
               type="primary"
               className="button_countdown"
               onClick={this.onClickReset}
-              disabled={isInactive}
+              disabled={isStopped}
             >
               Reset
             </Button>
@@ -200,12 +178,11 @@ class Countdown extends React.Component {
         </div>
         <div className="countdown-block-input">
           <CountdownInputTime
-            isInactive={isInactive}
+            isInactive={isStopped}
             onChangeMinutes={this.onChangeMinutes}
             onChangeSeconds={this.onChangeSeconds}
             minutes={minutes}
             seconds={seconds}
-            // onDisabledDisplay={!onDisabledDisplay}
           />
         </div>
         <div className="countdown-slider">
@@ -214,7 +191,7 @@ class Countdown extends React.Component {
             min={0}
             max={3600}
             onChange={this.onChangeSlider}
-            disabled={onDisabledSlider}
+            disabled={!isStopped}
             value={allTimeSecond}
           />
         </div>
