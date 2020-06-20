@@ -6,11 +6,6 @@ import './CountdownInputTime.scss';
 const CountdownInputTime = (props) => {
   const { isInactive, minutes, seconds, onChangeMinutes, onChangeSeconds, maxMinutes } = props;
 
-  /* отключаем инпут с секундами, если 720 минут */
-  const timeMaxInMinutes = () => {
-    return minutes >= maxMinutes ? isInactive : !isInactive;
-  };
-
   return (
     <div className="input-container">
       <div className="input-container_item">
@@ -33,7 +28,7 @@ const CountdownInputTime = (props) => {
           max={59}
           defaultValue={0}
           onChange={onChangeSeconds}
-          disabled={timeMaxInMinutes()}
+          disabled={!isInactive}
           value={seconds}
         />
       </div>

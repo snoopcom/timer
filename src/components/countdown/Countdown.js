@@ -7,7 +7,7 @@ const pathSound = require('../../assets/Countdown.mp3');
 
 const initState = {
   isActive: true,
-  isStopped: true,
+  isInactive: true,
   onDisabledStart: true,
   startTime: 0,
   currentTime: 0,
@@ -15,6 +15,7 @@ const initState = {
   minutes: 0,
   seconds: 0,
   allTimeSecond: 0,
+  maxTimeMinutes: 720 * 60,
 };
 
 class Countdown extends React.Component {
@@ -37,15 +38,6 @@ class Countdown extends React.Component {
 
     /* минуты */
     this.onChangeMinutes = (value) => {
-      const { minutes, allTimeSecond } = this.state;
-
-      /* чтобы не уходило за 720 */
-      if (allTimeSecond > minutes) {
-        this.setState({
-          seconds: 0,
-        });
-      }
-
       this.setState((prevState) => ({
         minutes: value,
         allTimeSecond: prevState.seconds + value * 60,
@@ -62,14 +54,22 @@ class Countdown extends React.Component {
 
     /* START */
     this.onClickStart = () => {
-      const { isActive } = this.state;
+      const { isActive, allTimeSecond, maxTimeMinutes } = this.state;
+
+      /* */
+      if (allTimeSecond > maxTimeMinutes) {
+        this.setState({
+          seconds: 0,
+          allTimeSecond: maxTimeMinutes,
+        })
+      }
 
       if (isActive) {
         this.intervalId = setInterval(this.timerStart, 60);
 
         this.setState({
           startTime: Date.now(),
-          isStopped: false,
+          isInactive: false,
         });
       }
 
@@ -81,7 +81,7 @@ class Countdown extends React.Component {
         clearInterval(this.intervalId);
 
         this.setState((prevState) => ({
-          isStopped: false,
+          isInactive: false,
           timeInS: prevState.timeInS,
           currentTime: prevState.timeInS,
         }));
@@ -94,7 +94,7 @@ class Countdown extends React.Component {
       this.sound.load();
       this.setState((prevState) => ({
         isActive: true,
-        isStopped: true,
+        isInactive: true,
         timeInS: 0,
         currentTime: 0,
         allTimeSecond: prevState.allTimeSecond,
@@ -141,7 +141,7 @@ class Countdown extends React.Component {
   }
 
   render() {
-    const { isActive, isStopped, allTimeSecond, onDisabledStart, seconds, minutes } = this.state;
+    const { isActive, isInactive, allTimeSecond, onDisabledStart, seconds, minutes } = this.state;
 
     const inputAllowed = allTimeSecond > 0 ? !onDisabledStart : onDisabledStart;
 
@@ -164,7 +164,7 @@ class Countdown extends React.Component {
               type="primary"
               className="button_countdown"
               onClick={this.onClickReset}
-              disabled={isStopped}
+              disabled={isInactive}
             >
               Reset
             </Button>
@@ -178,7 +178,7 @@ class Countdown extends React.Component {
         </div>
         <div className="countdown-block-input">
           <CountdownInputTime
-            isInactive={isStopped}
+            isInactive={isInactive}
             onChangeMinutes={this.onChangeMinutes}
             onChangeSeconds={this.onChangeSeconds}
             minutes={minutes}
@@ -191,7 +191,7 @@ class Countdown extends React.Component {
             min={0}
             max={3600}
             onChange={this.onChangeSlider}
-            disabled={!isStopped}
+            disabled={!isInactive}
             value={allTimeSecond}
           />
         </div>
